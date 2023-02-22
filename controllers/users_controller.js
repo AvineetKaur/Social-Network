@@ -1,9 +1,35 @@
 const User=require('../models/user');
 
 module.exports.profile = function(req, res){
-    return res.render('user_profile', {
-        title: 'User Profile'
-    });
+    //check if the cookie contains user id value
+    if(req.cookies.user_id)
+    {
+        User.findById(req.cookies.user_id,function(err,user)
+        {
+            console.log("Inside find id");
+            console.log(user);
+            if(err)
+            {console.log("Unable to find the user in database");return;}
+            if(user)
+            {
+                console.log("User is in db");
+                return res.render('user_profile', {
+                    title: 'User Profile'
+                });
+            }
+            else{
+                return res.redirect("/users/sign-in");
+
+            }
+           
+
+        })
+
+
+    }else{
+        return res.redirect("/users/sign-in");  
+    }
+    
 }
 
 //render sign up page
@@ -45,8 +71,8 @@ module.exports.create=function(req,res){
         return res.redirect('back');
     })
 }
-
-module.exports.createSession=function(req,res){
+//Using Manual auth
+/*module.exports.createSession=function(req,res){
 
     //find if user is present in db or not
     User.findOne({email:req.body.email},function(err,user){
@@ -72,5 +98,7 @@ module.exports.createSession=function(req,res){
             res.redirect('/users/sign-up');
         }
     })
+}*/
+module.exports.createSession=function(req,res){
+    return res.redirect('/');
 }
-
