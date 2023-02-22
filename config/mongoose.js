@@ -1,8 +1,9 @@
 //require library
 const mongoose=require('mongoose');
 
+const ConnectionString='mongodb://0.0.0.0:27017/SocialWebsiteDev';
 //connect to db using Connection string
-mongoose.connect('mongodb://0.0.0.0:27017/SocialWebsiteDev');
+mongoose.connect(ConnectionString);
 
 //aquire the connection to see if its successful or not
 const db=mongoose.connection;

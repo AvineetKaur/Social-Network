@@ -14,14 +14,15 @@ passport.use(new LocalStrategy({
             console.log("Invalid Username or paasword!")
             return done(null,false);
         }
-        console.log("User is found "+user.id);
-        return done(null,true);
+      
+        return done(null,user);
 
     });
 }));
 
 //serializing the user to decide which key is to be kept in the cookies
 passport.serializeUser(function(user,done){
+    console.log("User is found "+user.id);
     done(null,user.id);
 });
 
@@ -30,8 +31,27 @@ passport.deserializeUser(function(id,done){
     User.findById(id,function(err,user){
         if(err)
         {console.log("Error in finding user--> passport");return done(err);}
-    return done(null.user);
+    return done(null,user);
     });
 });
+
+//check if user is authenticated for sending data to views
+passport.checkAuthentication=function(req,res,next){
+    //if user is signed in, then pass on the request to next function(controller's action)
+    if(req.isAuthenticated()){
+        return next();
+    }
+    //if user is not signed in
+    return res.redirect('/users/sign-in');
+}
+//set users for views
+passport.setAuthenticatedUser=function(req,res,next){
+    if(req.isAuthenticated()){
+        //req.user contains the current signed in user from the cookies and we are sending the same in res.locals
+        res.locals.user=req.user;
+    }
+    next();
+}
+
 
 module.exports=passport;

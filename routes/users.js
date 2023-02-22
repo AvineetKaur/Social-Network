@@ -5,10 +5,10 @@ const router=express.Router();
 
 console.log("User router loaded");[]
 
-router.get('/profile',userController.profile);
+router.get('/profile',passport.checkAuthentication,userController.profile);
 router.get('/sign-in',userController.SignIn);
 router.get('/sign-up',userController.SignUp);
-
+router.get('/sign-out',userController.destroySession);
 router.post('/create',userController.create);
 //router.post('/create-session',userController.createSession);
 
